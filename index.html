@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Draggable and Droppable</title>
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
+    <style>
+        .container {
+            display: flex;
+            justify-content: space-around;
+            padding: 20px;
+        }
+        .draggable, .droppable {
+            width: 200px;
+            height: 200px;
+            border: 2px dashed #3498db;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            color: #3498db;
+            cursor: move;
+            position: relative;
+        }
+        .droppable {
+            background-color: #e0e0e0;
+        }
+        .highlight {
+            border-color: #f39c12;
+            background-color: #f9ebae;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div id="left" class="draggable">Drag me from here</div>
+        <div id="right" class="droppable">Drop here</div>
+    </div>
+    <div class="container">
+        <div id="right" class="draggable">Drag me from here</div>
+        <div id="left" class="droppable">Drop here</div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
+    <script>
+        $(function() {
+            // Make the elements draggable
+            $(".draggable").draggable({
+                revert: "invalid" // วัตถุจะกลับคืนถ้าไม่วางในเขตพื้นที่ที่กำหนด
+            });
+
+            // Make the elements droppable
+            $(".droppable").droppable({
+                accept: ".draggable",
+                drop: function(event, ui) {
+                    // Get the dragged item and the drop target
+                    var dragged = ui.draggable;
+                    var dropped = $(this);
+
+                    // Swap content
+                    var tempContent = dragged.html();
+                    dragged.html(dropped.html());
+                    dropped.html(tempContent);
+
+                    // Add highlight to dropped area
+                    dropped.addClass("highlight");
+                },
+                out: function(event, ui) {
+                    // Remove highlight when dragged item leaves
+                    $(this).removeClass("highlight");
+                }
+            });
+        });
+    </script>
+</body>
+</html>
