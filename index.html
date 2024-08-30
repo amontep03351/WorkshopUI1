@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Draggable and Droppable</title>
+    <title>Draggable List</title>
     <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
     <style>
         .container {
@@ -11,20 +11,31 @@
             justify-content: space-around;
             padding: 20px;
         }
-        .draggable, .droppable {
+        .list {
             width: 200px;
-            height: 200px;
+            min-height: 300px;
             border: 2px dashed #3498db;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 18px;
-            color: #3498db;
+            padding: 10px;
+            background-color: #f9f9f9;
+            overflow-y: auto;
+        }
+        .item {
+            width: 180px;
+            padding: 10px;
+            margin: 5px;
+            background-color: #3498db;
+            color: white;
+            text-align: center;
             cursor: move;
-            position: relative;
         }
         .droppable {
+            width: 200px;
+            min-height: 300px;
+            border: 2px dashed #3498db;
             background-color: #e0e0e0;
+            padding: 10px;
+            text-align: center;
+            line-height: 300px;
         }
         .highlight {
             border-color: #f39c12;
@@ -34,41 +45,37 @@
 </head>
 <body>
     <div class="container">
-        <div id="left" class="draggable">Drag me from here</div>
-        <div id="right" class="droppable">Drop here</div>
-    </div>
-    <div class="container">
-        <div id="right" class="draggable">Drag me from here</div>
-        <div id="left" class="droppable">Drop here</div>
+        <div id="draggable-list" class="list">
+            <div class="item">Item 1</div>
+            <div class="item">Item 2</div>
+            <div class="item">Item 3</div>
+            <div class="item">Item 4</div>
+        </div>
+        <div id="droppable-area" class="droppable">Drop items here</div>
     </div>
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
     <script>
         $(function() {
-            // Make the elements draggable
-            $(".draggable").draggable({
-                revert: "invalid" // วัตถุจะกลับคืนถ้าไม่วางในเขตพื้นที่ที่กำหนด
+            // Make the items draggable
+            $(".item").draggable({
+                revert: "invalid", // Revert if not dropped in a valid area
+                helper: "clone" // Use a copy of the item for dragging
             });
 
-            // Make the elements droppable
-            $(".droppable").droppable({
-                accept: ".draggable",
+            // Make the drop area droppable
+            $("#droppable-area").droppable({
+                accept: ".item",
                 drop: function(event, ui) {
-                    // Get the dragged item and the drop target
-                    var dragged = ui.draggable;
-                    var dropped = $(this);
-
-                    // Swap content
-                    var tempContent = dragged.html();
-                    dragged.html(dropped.html());
-                    dropped.html(tempContent);
-
-                    // Add highlight to dropped area
-                    dropped.addClass("highlight");
+                    var droppedItem = ui.helper.clone(); // Clone the dragged item
+                    $(this).append(droppedItem); // Add the item to the drop area
+                    droppedItem.removeClass("ui-draggable-dragging"); // Remove dragging class
+                },
+                over: function(event, ui) {
+                    $(this).addClass("highlight");
                 },
                 out: function(event, ui) {
-                    // Remove highlight when dragged item leaves
                     $(this).removeClass("highlight");
                 }
             });
