@@ -3,23 +3,33 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Draggable List for Mobile</title>
+    <title>Draggable List with Consistent Size</title>
     <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
     <style>
         .container {
             display: flex;
             justify-content: space-around;
             padding: 20px;
-            flex-wrap: wrap; /* Allow items to wrap on smaller screens */
+            flex-wrap: wrap;
         }
         .list, .droppable {
             width: 100%;
-            max-width: 200px; /* Adjust max-width for responsive design */
+            max-width: 200px;
             min-height: 300px;
             border: 2px dashed #3498db;
             padding: 10px;
             background-color: #f9f9f9;
             overflow-y: auto;
+            box-sizing: border-box;
+        }
+        .list {
+            display: flex;
+            flex-direction: column;
+        }
+        .droppable {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start; /* Align items to the left */
         }
         .item {
             width: 100%;
@@ -29,11 +39,7 @@
             color: white;
             text-align: center;
             cursor: move;
-        }
-        .droppable {
-            background-color: #e0e0e0;
-            text-align: center;
-            line-height: 300px;
+            box-sizing: border-box;
         }
         .highlight {
             border-color: #f39c12;
@@ -57,13 +63,18 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui-touch-punch/0.2.3/jquery.ui.touch-punch.min.js"></script>
     <script>
         $(function() {
-            // Make the items draggable
             $(".item").draggable({
                 revert: "invalid", // Revert if not dropped in a valid area
-                helper: "clone" // Use a copy of the item for dragging
+                helper: "clone",  // Use a clone for dragging
+                start: function(event, ui) {
+                    // Adjust size of the clone to match original
+                    ui.helper.css({
+                        width: $(this).outerWidth(),
+                        height: $(this).outerHeight()
+                    });
+                }
             });
 
-            // Make the drop area droppable
             $("#droppable-area").droppable({
                 accept: ".item",
                 drop: function(event, ui) {
