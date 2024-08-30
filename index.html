@@ -3,16 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Draggable List</title>
+    <title>Draggable List for Mobile</title>
     <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
     <style>
         .container {
             display: flex;
             justify-content: space-around;
             padding: 20px;
+            flex-wrap: wrap; /* Allow items to wrap on smaller screens */
         }
-        .list {
-            width: 200px;
+        .list, .droppable {
+            width: 100%;
+            max-width: 200px; /* Adjust max-width for responsive design */
             min-height: 300px;
             border: 2px dashed #3498db;
             padding: 10px;
@@ -20,20 +22,16 @@
             overflow-y: auto;
         }
         .item {
-            width: 180px;
+            width: 100%;
             padding: 10px;
-            margin: 5px;
+            margin: 5px 0;
             background-color: #3498db;
             color: white;
             text-align: center;
             cursor: move;
         }
         .droppable {
-            width: 200px;
-            min-height: 300px;
-            border: 2px dashed #3498db;
             background-color: #e0e0e0;
-            padding: 10px;
             text-align: center;
             line-height: 300px;
         }
@@ -56,6 +54,7 @@
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui-touch-punch/0.2.3/jquery.ui.touch-punch.min.js"></script>
     <script>
         $(function() {
             // Make the items draggable
